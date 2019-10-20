@@ -336,3 +336,5 @@ ASALocalRun/
 build-config.toml
 .build/
 /build/BUILD
+
+*.csproj

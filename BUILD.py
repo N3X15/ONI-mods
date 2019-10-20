@@ -15,7 +15,7 @@ MSBuildTargets to completeself.
 Oh, and this entire system will skip steps if the files it uses haven't changed, AND
 has a cool-looking console output.
 '''
-import os, sys
+import os, sys, re
 from typing import Dict, List
 
 from buildtools.maestro import BuildMaestro
@@ -59,10 +59,16 @@ class MSBuildTarget(SingleBuildTarget):
 
 def mkproject(bm: BuildMaestro, project: str, depends: List[str] = []):
     with log.info('Configuring %s...', project):
-        dll = os.path.join('src', project, 'bin', project+'.dll')
         proj_dir = os.path.join('src', project)
+
+        projin = bm.add(ReplaceTextTarget(os.path.join(proj_dir, f'{project}.csproj'),os.path.join(proj_dir, f'{project}.csproj.in'), replacements={
+            re.escape('$(ONIPath)'): CONFIG.get('paths.oni').replace('\\', '\\\\')
+        }))
+
+        dll = os.path.join('src', project, 'bin', project+'.dll')
+
         csfiles = [f for f in os_utils.get_file_list(os.path.join(proj_dir, 'Source')) if f.endswith('.cs')]
-        csp = bm.add(MSBuildTarget(dll, os.path.join(proj_dir, f'{project}.sln'), csfiles, dependencies=depends))
+        csp = bm.add(MSBuildTarget(dll, os.path.join(proj_dir, f'{project}.sln'), csfiles, dependencies=[projin.target]+depends))
         csp.msb.properties['ONIPath'] = CONFIG.get('paths.oni')
 
         deploydir = os.path.join(LOCALMODS, project)
