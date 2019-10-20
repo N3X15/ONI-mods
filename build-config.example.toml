@@ -1,0 +1,7 @@
+[paths]
+# Path to Visual Studio 2019.  This is set up for Community Edition.
+vs-dir = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community"
+# Path to ONI
+oni = "C:\\Program Files (x86)\\Steam\\SteamApps\\common\\OxygenNotIncluded"
+# Path to your ONI directory.
+oni-mods = "C:\\Users\\Rob\\Documents\\Klei\\OxygenNotIncluded\\mods"
