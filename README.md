@@ -13,7 +13,7 @@ You'll need:
 
 Do:
 
-1. git clone https://github.com/N3X15/ONI-Mods.git
+1. git clone https://github.com/N3X15/ONI-Mods.git where-you-want-it/
 
 ## Building
 
@@ -22,8 +22,10 @@ Do:
 0. You will need to install Visual Studio 2019.
 1. Run `BUILD.exe` to build everything and install it to `$HOME/Documents/Klein/Oxygen Not Included/mods/dev`.
 
+* If you get errors, make sure the detected paths in build-config.toml are correct.
+
 ### Linux
-You're SOL:  My poor Linux laptop doesn't have the power to run this game, and the buildsystem is dependent on VS2019.  I may change the buildsystem to nant/[whatever the popular CLI build system for C# is] in the future, if there's enough demand.
+You're SOL:  My poor Linux laptop doesn't have the power to run this game, and the buildsystem is currently dependent on VS2019.  I may change the buildsystem to nant/[whatever the popular CLI build system for C# is] in the future, if there's enough demand.
 
 ## BUILD.exe
 *AKA: I don't trust this .exe, tell me how to build it!*
@@ -36,7 +38,7 @@ To build it, you'll need:
  * git + [git lfs](https://git-lfs.github.com/)
  * [Visual Studio C++ 14 for Python](https://wiki.python.org/moin/WindowsCompilers#Microsoft_Visual_C.2B-.2B-_14.2_standalone:_Build_Tools_for_Visual_Studio_2019_.28x86.2C_x64.2C_ARM.2C_ARM64.29)
  * N3X15's `buildtools` library (`pip install git+https://gitlab.com/N3X15/python-build-tools.git`)
-   * Yes, this library is a mess and pulls in tons of dependencies. I know.
+   * Yes, this library is a mess and pulls in tons of dependencies. I know.  I use it for literally everything these days.
  * pyinstaller (`pip install pyinstaller`)
 
 After all that, just run MKBUILD.bat to invoke pyinstaller. BUILD.exe will be overwritten with the new one.
