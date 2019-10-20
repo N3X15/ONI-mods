@@ -1,3 +1,23 @@
+'''
+Shitty Buildsystem for Stuff
+
+MIT License Here
+
+Wondering what the Hell all this does?  It uses a sloppy but powerful dependency-driven
+buildsystem I whipped together in Python over the years, called BuildMaestro.
+
+In short, each build step can have dependencies that they will wait to complete before
+executing themselves.
+
+In here, for instance, the file deployment steps (CopyFileTarget) will wait for the
+MSBuildTargets to completeself.
+
+Oh, and this entire system will skip steps if the files it uses haven't changed, AND
+has a cool-looking console output.
+'''
+import os, sys
+from typing import Dict, List
+
 from buildtools.maestro import BuildMaestro
 from buildtools.maestro.base_target import SingleBuildTarget
 from buildtools.config import TOMLConfig
@@ -6,9 +26,8 @@ from buildtools.maestro.fileio import ReplaceTextTarget, CopyFileTarget, CopyFil
 from buildtools.maestro.shell import CommandBuildTarget
 from buildtools.buildsystem.msbuild import MSBuild
 from buildtools import os_utils, log
-import os, sys
-from typing import Dict, List
-devenv = r'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\devenv.exe'
+
+# Detect paths and generate default config.
 CONFIG = TOMLConfig('build-config.toml', default={
     'paths': {
         'vs-dir':    os.path.join('C:\\', 'Program Files (x86)', 'Microsoft Visual Studio', '2019', 'Community'),
@@ -17,12 +36,14 @@ CONFIG = TOMLConfig('build-config.toml', default={
     },
 })
 
-ENV = os_utils.ENV.clone()
-
+# Our deployment directory.
 LOCALMODS = os.path.join(CONFIG.get('paths.oni-mods'), 'dev')
+
 # C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\amd64\MSBuild.exe
 MSBUILD = os.path.join(CONFIG.get('paths.vs-dir'), 'MSBuild', 'Current', 'Bin', 'amd64', 'MSBuild.exe')
 
+# Custom SingleBuildTarget. We actually generate a shitload of files, but since I don't want to do FS snapshots,
+# and we only really care about one...
 class MSBuildTarget(SingleBuildTarget):
     BT_LABEL = 'MSBUILD'
     def __init__(self, target: str, solution: str, files: List[str], configuration: str = None, properties: Dict[str, str] = {}, dependencies=[], msbuild_executable=MSBUILD):
