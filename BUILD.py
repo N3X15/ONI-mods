@@ -67,9 +67,13 @@ def mkproject(bm: BuildMaestro, project: str, depends: List[str] = []):
 
         dll = os.path.join('src', project, 'bin', project+'.dll')
 
-        csfiles = [f for f in os_utils.get_file_list(os.path.join(proj_dir, 'Source')) if f.endswith('.cs')]
-        csp = bm.add(MSBuildTarget(dll, os.path.join(proj_dir, f'{project}.sln'), csfiles, dependencies=[projin.target]+depends))
+        csfiles = [f for f in os_utils.get_file_list(os.path.join(proj_dir, 'Source'), prefix=os.path.join(proj_dir, 'Source')) if f.endswith('.cs')]
+        csfiles.sort()
+        for csfile in csfiles:
+            log.info(csfile)
+        csp = bm.add(MSBuildTarget(dll, os.path.join(proj_dir, f'{project}.sln'), files=csfiles, dependencies=[projin.target]+depends))
         csp.msb.properties['ONIPath'] = CONFIG.get('paths.oni')
+        #csp.msb.configuration = 'Debug'
 
         deploydir = os.path.join(LOCALMODS, project)
         bm.add(CopyFileTarget(deploydir, dll, dependencies=[csp.target]))

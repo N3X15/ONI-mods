@@ -2,6 +2,7 @@
 using TUNING;
 using UnityEngine;
 using NightLib.AddBuilding;
+using System.Reflection;
 
 namespace MoreTemperatureSensors
 {
@@ -17,7 +18,7 @@ namespace MoreTemperatureSensors
         private static string LogicPortDescOn = "Sends an " + UI.FormatAsLink("Active", "LOGIC") + " signal while building " + UI.FormatAsLink("Temperature", "HEAT") + " is within its configured Temperature Threshold range";
         private static string LogicPortDescOff = "Sends an " + UI.FormatAsLink("Standby", "LOGIC") + " signal while building " + UI.FormatAsLink("Temperature", "HEAT") + " is outside its configured Temperature Threshold range";
 
-        public static readonly LogicPorts.Port OUTPUT_PORT = LogicPorts.Port.OutputPort(LogicSwitch.PORT_ID, new CellOffset(0, 0), LogicPortDesc, LogicPortDescOn, LogicPortDescOff, false);
+        private static readonly LogicPorts.Port OUTPUT_PORT = LogicPorts.Port.OutputPort(LogicSwitch.PORT_ID, new CellOffset(0, 0), LogicPortDesc, LogicPortDescOn, LogicPortDescOff, false, false);
 
 
         public static void Setup()
@@ -55,24 +56,24 @@ namespace MoreTemperatureSensors
             buildingDef.PermittedRotations = PermittedRotations.R360;
             SoundEventVolumeCache.instance.AddVolume("switchthermal_kanim", "PowerSwitch_on", NOISE_POLLUTION.NOISY.TIER3);
             SoundEventVolumeCache.instance.AddVolume("switchthermal_kanim", "PowerSwitch_off", NOISE_POLLUTION.NOISY.TIER3);
-            GeneratedBuildings.RegisterWithOverlay(OverlayModes.Logic.HighlightItemIDs, BuildingTemperatureSensorConfig.ID);
+            GeneratedBuildings.RegisterWithOverlay(OverlayModes.Logic.HighlightItemIDs, ID);
             return buildingDef;
         }
 
         public override void DoPostConfigurePreview(BuildingDef def, GameObject go)
         {
-            GeneratedBuildings.RegisterLogicPorts(go, BuildingTemperatureSensorConfig.OUTPUT_PORT);
+            GeneratedBuildings.RegisterLogicPorts(go, OUTPUT_PORT);
         }
 
         public override void DoPostConfigureUnderConstruction(GameObject go)
         {
-            GeneratedBuildings.RegisterLogicPorts(go, BuildingTemperatureSensorConfig.OUTPUT_PORT);
+            GeneratedBuildings.RegisterLogicPorts(go, OUTPUT_PORT);
         }
 
         public override void DoPostConfigureComplete(GameObject go)
         {
             GeneratedBuildings.MakeBuildingAlwaysOperational(go);
-            GeneratedBuildings.RegisterLogicPorts(go, BuildingTemperatureSensorConfig.OUTPUT_PORT);
+            GeneratedBuildings.RegisterLogicPorts(go, OUTPUT_PORT);
 
             BuildingTemperatureSensor logicTemperatureSensor = go.AddOrGet<BuildingTemperatureSensor>();
             logicTemperatureSensor.manuallyControlled = false;

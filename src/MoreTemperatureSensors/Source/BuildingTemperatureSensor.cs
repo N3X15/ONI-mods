@@ -20,6 +20,7 @@ namespace MoreTemperatureSensors
             component.TintColour = BuildingTemperatureSensorConfig.BuildingColor();
         }
 
+
         protected override void OnSpawn()
         {
             base.OnSpawn();
